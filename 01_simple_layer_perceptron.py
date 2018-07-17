@@ -27,6 +27,18 @@ LEARNING_RATE = 0.1
 THRESHOLD = 0.2
 MAX_LOOP = 10000
 
+def _set_data(args=None):
+    if args.data_set:
+        if args.data_set==0:
+            _dtype = AND_DATA
+        elif args.data_set==1:
+            _dtype = OR_DATA
+        else:
+            _dtype = XOR_DATA
+    else:
+        _dtype=AND_DATA
+    return _dtype
+
 #step1 : Initialisation
 def initialisation():
     """
@@ -117,31 +129,20 @@ def run_train(data_type=AND_DATA):
     #display output
     print(df_view)
     
-    #save a output dataframe to excel
+    #save output dataframes to a excel file
     writer = pd.ExcelWriter('output.xlsx')
     df_view.to_excel(writer, 'train_process')
     df_train.to_excel(writer, 'train_data')
     writer.save()
     
-def set_data(args=None):
-    if args.data_type:
-        if args.data_type==0:
-            _dtype = AND_DATA
-        elif args.data_type==1:
-            _dtype = OR_DATA
-        else:
-            _dtype = XOR_DATA
-    else:
-        _dtype=AND_DATA
-    return _dtype
     
 if __name__ == "__main__":
     
     parser = argparse.ArgumentParser()
-    parser.add_argument("--data_type", 
-                        help="select a data type[0:AND, 1:OR, 2:XOR]",
+    parser.add_argument("--data_set", 
+                        help="select a data set[0:AND, 1:OR, 2:XOR]",
                         type=int)
     args = parser.parse_args()
-    data_type = set_data(args)
+    data_set = _set_data(args)
 
-    run_train(data_type=data_type)
+    run_train(data_type=data_set)
